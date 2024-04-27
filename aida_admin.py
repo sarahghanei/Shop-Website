@@ -13,8 +13,8 @@ logger = logging.getLogger()
 
 class Admin:
     def __init__(self):
-        file = open("admin info.txt", "r")
-        password = file.readline().split(",")
+        with open("admin info.txt", "r") as file:
+            password = file.readline().split(",")
         self.password = str(password[1])  # the password by default is 0000
 
     def login(self, pas):
@@ -61,26 +61,26 @@ class Admin:
         file_data = file.readlines()
         file.close()
         the_num = int(input("the amount of charge:\n"))
-        file_overwrite = open("product.csv", 'w')
-        for line in file_data:
-            data = line.strip().split(",")
-            if data[1] == brand and data[2] == barcode:
-                stock = int(str(data[4]))
-                stock += the_num
-                data[4] = str(stock)
-                new_data = ",".join(data)
-                file_overwrite.write(new_data + "\n")
-            else:
-                file_overwrite.write(line)
+        with open("product.csv", 'w') as file_overwrite:
+            for line in file_data:
+                data = line.strip().split(",")
+                if data[1] == brand and data[2] == barcode:
+                    stock = int(str(data[4]))
+                    stock += the_num
+                    data[4] = str(stock)
+                    new_data = ",".join(data)
+                    file_overwrite.write(new_data + "\n")
+                else:
+                    file_overwrite.write(line)
 
     @staticmethod
     def show_invoices():
         """admin can see the previous invoices by this method"""
-        file = open("invoice.csv", "r")
-        for line in file.readlines():
-            data = line.strip().split(",")
-            the_data = " ".join(data)
-            print(the_data)
+        with open("invoice.csv", "r") as file:
+            for line in file.readlines():
+                data = line.strip().split(",")
+                the_data = " ".join(data)
+                print(the_data)
 
     def __str__(self):
         pass

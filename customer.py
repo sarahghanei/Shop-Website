@@ -71,24 +71,22 @@ class Customer:  # Define the customer class to organize the client's tasks and 
     def added(self):
         self.price = 0  # Total purchase total
         barcode = None  # Defined for when the barcode was not found
-
-        # Using the name and brand, we find the barcode of the product:
-        file = open("product.csv", 'r')
-        for line in file.readlines():
-            data = line.strip().split(",")
-            if self.product_name.get().lower().strip() == data[0] and self.brand.get().lower().strip() == data[1]:
-                barcode = data[2]
-                if int(self.number.get().strip()) <= int(data[4]):  # Check inventory number
-                    the_price_of_one = int(data[3])
-                    # We store the product information with the barcode found in the basket
-                    self.basket[barcode] = (data[0], data[1], data[2], int(self.number.get().strip()), data[3],
-                                            the_price_of_one * int(self.number.get().strip()), None)
-                    self.price += the_price_of_one * int(self.number.get().strip())
-                    messagebox.showinfo('Buy', 'Product added to your basket')
-                    logger.info('An item was added to a customers basket')
-                else:
-                    messagebox.showerror('Buy', 'The amount you want is more than the inventory')
-                    logger.error('Unsuccessful attempt to buy goods : Insufficient inventory')
+        with open("product.csv", 'r') as file:
+            for line in file.readlines():
+                data = line.strip().split(",")
+                if self.product_name.get().lower().strip() == data[0] and self.brand.get().lower().strip() == data[1]:
+                    barcode = data[2]
+                    if int(self.number.get().strip()) <= int(data[4]):  # Check inventory number
+                        the_price_of_one = int(data[3])
+                        # We store the product information with the barcode found in the basket
+                        self.basket[barcode] = (data[0], data[1], data[2], int(self.number.get().strip()), data[3],
+                                                the_price_of_one * int(self.number.get().strip()), None)
+                        self.price += the_price_of_one * int(self.number.get().strip())
+                        messagebox.showinfo('Buy', 'Product added to your basket')
+                        logger.info('An item was added to a customers basket')
+                    else:
+                        messagebox.showerror('Buy', 'The amount you want is more than the inventory')
+                        logger.error('Unsuccessful attempt to buy goods : Insufficient inventory')
 
     def showbasket(self):
         # A window will open to display the customer invoice as a table and finalize it if desired
