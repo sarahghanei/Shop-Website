@@ -17,7 +17,7 @@ logger = logging.getLogger()
 class Admin:  # Define the admin class to organize the admin's tasks and authority
     def __init__(self):
         file = open("admin info.txt", "r")
-        password = file.readline().split(",")
+        password = file.readline(5_000_000).split(",")
         self.password = str(password[1])  # the password by default is 0000
         self.hash_entry_password = None
 
