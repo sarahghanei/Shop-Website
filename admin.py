@@ -16,8 +16,8 @@ logger = logging.getLogger()
 
 class Admin:  # Define the admin class to organize the admin's tasks and authority
     def __init__(self):
-        file = open("admin info.txt", "r")
-        password = file.readline().split(",")
+        with open("admin info.txt", "r") as file:
+            password = file.readline().split(",")
         self.password = str(password[1])  # the password by default is 0000
         self.hash_entry_password = None
 
@@ -92,17 +92,15 @@ class Admin:  # Define the admin class to organize the admin's tasks and authori
                                                                                                      sticky="ew",
                                                                                                      padx=5)
             taskbar_frame.grid(row=0, column=0, sticky="ns")
-
-            # Warns the admin if the stock is out of stock:
-            file = open("product.csv", 'r')
-            line_counter = 0
-            for line in file.readlines():
-                data = line.strip().split(",")
-                if line_counter > 0:
-                    if int(data[4]) == 0:
-                        messagebox.showerror('storeroom', 'Inventory with {} barcode is exhausted'.format(data[2]))
-                        logger.warning('Inventory with {} barcode is exhausted'.format(data[2]))
-                line_counter += 1
+            with open("product.csv", 'r') as file:
+                line_counter = 0
+                for line in file.readlines():
+                    data = line.strip().split(",")
+                    if line_counter > 0:
+                        if int(data[4]) == 0:
+                            messagebox.showerror('storeroom', 'Inventory with {} barcode is exhausted'.format(data[2]))
+                            logger.warning('Inventory with {} barcode is exhausted'.format(data[2]))
+                    line_counter += 1
 
             loggingadmin.mainloop()  # creating a loop for the main window to store the changes
         else:
@@ -230,25 +228,24 @@ class Admin:  # Define the admin class to organize the admin's tasks and authori
 
         # Define the main frame:
         fr_main = Frame(seeinvokes, relief=RAISED, bd=1)
-        # The invoices table is shown to her
-        file = open("invoice.csv", "r")
-        row = 1
-        for line in file.readlines():
-            data = line.strip().split(",")
-            productname = Label(fr_main, text=data[0].strip() + ' , ' + data[1].strip())
-            barcode = Label(fr_main, text=data[2].strip())
-            number = Label(fr_main, text=data[3].strip())
-            price = Label(fr_main, text=data[4].strip())
-            sum = Label(fr_main, text=data[5].strip())
-            totallsum = Label(fr_main, text=data[6].strip())
-            productname.grid(row=row, column=0, sticky="w", padx=5, pady=5)
-            barcode.grid(row=row, column=1, sticky="w", padx=5, pady=5)
-            number.grid(row=row, column=2, sticky="w", padx=5, pady=5)
-            price.grid(row=row, column=3, sticky="w", padx=5, pady=5)
-            sum.grid(row=row, column=4, sticky="w", padx=5, pady=5)
-            totallsum.grid(row=row, column=5, sticky="w", padx=5, pady=5)
+        with open("invoice.csv", "r") as file:
+            row = 1
+            for line in file.readlines():
+                data = line.strip().split(",")
+                productname = Label(fr_main, text=data[0].strip() + ' , ' + data[1].strip())
+                barcode = Label(fr_main, text=data[2].strip())
+                number = Label(fr_main, text=data[3].strip())
+                price = Label(fr_main, text=data[4].strip())
+                sum = Label(fr_main, text=data[5].strip())
+                totallsum = Label(fr_main, text=data[6].strip())
+                productname.grid(row=row, column=0, sticky="w", padx=5, pady=5)
+                barcode.grid(row=row, column=1, sticky="w", padx=5, pady=5)
+                number.grid(row=row, column=2, sticky="w", padx=5, pady=5)
+                price.grid(row=row, column=3, sticky="w", padx=5, pady=5)
+                sum.grid(row=row, column=4, sticky="w", padx=5, pady=5)
+                totallsum.grid(row=row, column=5, sticky="w", padx=5, pady=5)
 
-            row += 1
+                row += 1
 
         fr_main.grid(row=0, column=1, sticky="nsew")
         seeinvokes.mainloop()  # creating a loop for the main window to store the changes
